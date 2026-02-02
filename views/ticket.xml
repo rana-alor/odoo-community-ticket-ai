@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_community_ticket_form" model="ir.ui.view">
+        <field name="name">community.ticket.form</field>
+        <field name="model">community.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                       <field name="title"/>
+                        <field name="description"/>
+                        <field name="ai_priority"/>
+                        <field name="ai_needs_review"/>
+                        <field name="ai_summary"/>
+                        <field name="ai_suggested_reply"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_community_ticket_tree" model="ir.ui.view">
+        <field name="name">community.ticket.tree</field>
+        <field name="model">community.ticket</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="ai_priority"/>
+                <field name="ai_needs_review"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_community_ticket" model="ir.actions.act_window">
+        <field name="name">Ticket</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">community.ticket</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+    <menuitem id="menu_community_tickets"
+         name="Tickets"
+         parent="menu_community_ticket_root"
+         action="action_community_ticket"
+         sequence="10"/>
+</odoo>

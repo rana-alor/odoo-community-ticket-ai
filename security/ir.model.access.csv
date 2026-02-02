@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+community_ticket_ai.access_community_ticket,access_community_ticket,community_ticket_ai.model_community_ticket,base.group_user,1,1,1,1

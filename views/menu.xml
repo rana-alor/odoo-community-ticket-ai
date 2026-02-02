@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_community_ticket_root"
+         name="Community Tickets"
+         sequence="10"/>
+</odoo>
