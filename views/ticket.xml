@@ -23,20 +23,44 @@
                         <group>
                             <field name="title"/>
                             <field name="description"/>
-                            <field name="spoc_name"/>
+                            <field name="spoc_id"/>
                             <field name="tag_ids" widget="many2many_tags"/>
                         </group>
                         <group>
-                            <field name="ai_priority"/>
+                            <field name="ai_priority_level" widget="priority"/>
                             <field name="ai_needs_review"/>
                             <field name="ai_confidence"/>
-                            <field name="ai_summary"/>
-                            <field name="ai_suggested_reply"/>
                         </group>
                         <group>
-                            <field name="ai_error" attrs="{'invisible': [('ai_error','=','')]}"/>
+                            <field name="ai_error" attrs="{'invisible': ['|', ('ai_error','=',False), ('ai_error','=','')]}"/>
                         </group>
                     </group>
+                    <div class="mt16">
+                        <div class="o_horizontal_separator">
+                            <b>AI Fields</b>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="ai_summary"/>
+                                <field name="ai_summary" nolabel="1"/>
+                                <div class="mt16 community_ticket_ai_reply_wrap">
+                                    <label for="ai_suggested_reply"/>
+                                    <field name="ai_suggested_reply" nolabel="1"/>
+                                    <button name="action_open_reply_composer"
+                                            type="object"
+                                            class="btn btn-link community_ticket_ai_send_btn"
+                                            icon="fa-paper-plane"
+                                            title="Send suggested reply"/>
+                                </div>
+                                <div class="text-end mt8">
+                                    <button name="action_generate_ai_draft"
+                                            type="object"
+                                            string="AI Assistant"
+                                            class="btn-primary"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -57,11 +81,52 @@
             </tree>
         </field>
     </record>
+    <record id="view_community_ticket_kanban" model="ir.ui.view">
+        <field name="name">community.ticket.kanban</field>
+        <field name="model">community.ticket</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="ref"/>
+                <field name="title"/>
+                <field name="spoc_id"/>
+                <field name="ai_priority_level"/>
+                <field name="ai_needs_review"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <strong class="o_kanban_record_title">
+                                    <t t-esc="record.title.value"/>
+                                    <t t-if="record.ref.value">
+                                        (<t t-esc="record.ref.value"/>)
+                                    </t>
+                                </strong>
+                            </div>
+                            <div class="o_kanban_record_body mt-3">
+                                <div>
+                                    <field name="spoc_id"/>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="ai_priority_level" widget="priority"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="ai_needs_review" widget="checkbox"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     <record id="action_community_ticket" model="ir.actions.act_window">
         <field name="name">Ticket</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">community.ticket</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'group_by': 'ai_priority_level'}</field>
     </record>
     <menuitem id="menu_community_tickets"
          name="Tickets"

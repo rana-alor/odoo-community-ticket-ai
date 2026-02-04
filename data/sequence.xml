@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="community_ticket_sequence" model="ir.sequence">
+            <field name="name">Community Ticket sequence</field>
+            <field name="code">community.ticket</field>
+            <field name="prefix">#</field>
+            <field name="padding">2</field>
+        </record>
+    </data>
+</odoo>

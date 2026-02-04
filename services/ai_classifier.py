@@ -105,6 +105,40 @@ def mock_analyze(title: str, description: str, tags=None) -> dict:
         ),
     }
 
+def analyze_priority_only(
+    title: str,
+    description: str,
+    tags=None,
+    *,
+    auto_apply_threshold: float = DEFAULT_AUTO_APPLY_THRESHOLD,
+) -> Dict[str, Any]:
+    """
+    Cheap path: only determines priority/confidence/needs_review/error.
+    Designed for use on create when mock/demo mode is enabled.
+    """
+    tags = tags or []
+    try:
+        data = mock_analyze(title, description, tags)
+
+        if not description or not description.strip():
+            data["confidence"] = min(float(data["confidence"]), 0.40)
+
+        data = add_needs_review(data, threshold=auto_apply_threshold)
+
+        return {
+            "priority": data["priority"],
+            "confidence": float(data["confidence"]),
+            "needs_review": bool(data["needs_review"]),
+            "error": data.get("error", "") or "",
+        }
+    except Exception as e:
+        return {
+            "priority": "Low",
+            "confidence": 0.0,
+            "needs_review": True,
+            "error": str(e),
+        }
+
 
 def analyze_text(
     title: str,
@@ -118,23 +152,6 @@ def analyze_text(
     prompt_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
 
-    """
-    Main function to call from Odoo.
-
-    Returns:
-      {
-        "priority": "Low|Medium|High",
-        "confidence": float 0..1,
-        "summary": str,
-        "suggested_reply": str,
-        "needs_review": bool,
-        "error": str
-      }
-
-    Notes:
-    - No automatic sending. This only produces suggestions.
-    - mock_mode can be passed explicitly; if None, reads env COMMUNITY_TICKET_AI_MOCK=1 for dev convenience.
-    """
 
     if (not title or not title.strip()) and (not description or not description.strip()):
         return {

@@ -1,0 +1,22 @@
+.community_ticket_ai_reply_wrap {
+  position: relative;
+  width: 100%;
+}
+
+.community_ticket_ai_reply_wrap textarea,
+.community_ticket_ai_reply_wrap .o_field_text {
+  width: 100% !important;
+}
+
+.community_ticket_ai_reply_wrap textarea {
+  padding-right: 32px;
+}
+
+.community_ticket_ai_send_btn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 5;
+  padding: 0;
+  min-width: 0;
+}
